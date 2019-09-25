@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.baizhi.dao.EmpDAO">
+
+    <insert id="addEmp">
+        insert into t_emp (picture,username,salary,age,depid) values (#{picture},#{username},#{salary},#{age},#{depid});
+    </insert>
+
+    <!--查询所有功能-->
+    <resultMap id="res" type="Emp">
+        <id column="eid" property="id"></id>
+        <result column="eusername" property="username"></result>
+        <result column="epicture" property="picture"></result>
+        <result column="esalary" property="salary"></result>
+        <result column="eage" property="age"></result>
+        <result column="edepid" property="depid"></result>
+        <association property="dep" javaType="Dep">
+            <id column="did" property="id"></id>
+            <result column="dnumber" property="number"></result>
+            <result column="ddepartment" property="department"></result>
+        </association>
+    </resultMap>
+
+    <select id="selectAll" resultMap="res">
+        select e.id as eid,e.picture as epicture,e.username as eusername,e.salary as esalary,e.age as eage,d.id as did,d.department as ddepartment
+        from t_emp e left join t_dep d on e.depid=d.id where e.depid = #{id}
+    </select>
+
+    <select id="selectEmp" resultMap="res">
+        select e.id as eid,e.picture as epicture,e.username as eusername,e.salary as esalary,e.age as eage,d.id as did,d.department as ddepartment
+        from t_emp e left join t_dep d on e.depid=d.id where e.id = #{eid}
+    </select>
+
+    <!--修改功能-->
+    <update id="updateEmp">
+        update t_emp set username=#{username},salary=#{salary},age=#{age},depid=#{depid}<if test="picture!=null">,picture=#{picture} </if>
+        where id=#{id}
+    </update>
+
+    <!--删除功能-->
+    <delete id="deleteEmp">
+        delete from t_emp where id=#{id}
+    </delete>
+
+</mapper>
